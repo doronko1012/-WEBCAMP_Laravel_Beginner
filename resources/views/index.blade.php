@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layout')
+
+{{--メインコンテンツ --}}
+@section('contents')
         <title>ログイン機能付きタスク管理サービス</title>
     </head>
     <body>
@@ -12,5 +11,4 @@
             パスワード：<input type="password" name="password"><br>
             <button>ログインする</button>
         </form>
-    </body>
-</html>
+ @endsection
