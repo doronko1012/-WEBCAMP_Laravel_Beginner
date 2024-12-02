@@ -11,4 +11,4 @@
             パスワード：<input type="password" name="password"><br>
             <button>ログインする</button>
         </form>
- @endsection
+@endsection
