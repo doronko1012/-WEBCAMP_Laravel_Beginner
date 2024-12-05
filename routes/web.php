@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +18,14 @@ use App\Http\Controllers\TaskController;
 */
 // タスク管理システム
 Route::get('/', [AuthController::class, 'index']);
+Route::get('/task/list', [TaskController::class, 'list']);
+Route::Post('/login', [AuthController::class, 'login']);
+
 
 // テスト用
 Route::get('/welcome', [WelcomeController::class, 'index']);
 Route::get('/welcome/second', [WelcomeController::class, 'second']);
-Route::get('/task/list', [TaskController::class, 'list']);
+
+// formテスト用
+Route::get('/test', [TestController::class, 'index']);
+Route::post('/test/input', [TestController::class, 'input']);
