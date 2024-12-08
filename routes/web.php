@@ -23,6 +23,7 @@ Route::Post('/login', [AuthController::class, 'login']);
 // 認可処理
 Route::middleware(['auth'])->group(function() {
     Route::get('/task/list', [TaskController::Class, 'list']);
+    Route::post('/task/register', [TaskController::Class, 'register']);
     Route::get('/logout', [AuthController::Class, 'logout']);
 });
 

@@ -33,5 +33,8 @@ class TestController extends Controller
         // var_dump($validatedData); exit;
 
         return view('test.input', ['datum' => $validatedData]);
-    }    
+    }
+    
+    
+    
 }
