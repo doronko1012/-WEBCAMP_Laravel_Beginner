@@ -22,8 +22,11 @@ Route::Post('/login', [AuthController::class, 'login']);
 
 // 認可処理
 Route::middleware(['auth'])->group(function() {
-    Route::get('/task/list', [TaskController::Class, 'list']);
-    Route::post('/task/register', [TaskController::Class, 'register']);
+    Route::prefix('/task')->group(function () {
+        Route::get('/list', [TaskController::Class, 'list']);
+        Route::post('/register', [TaskController::Class, 'register']);
+        Route::get('/detail/{task_id}', [TaskController::class, 'detail'])->whereNumber('task_id')->name('detail');
+    });
     Route::get('/logout', [AuthController::Class, 'logout']);
 });
 
