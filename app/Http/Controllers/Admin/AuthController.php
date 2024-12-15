@@ -30,22 +30,18 @@ class AuthController extends Controller
 
         // // データの取得
         $datum = $request->validated();
-        var_dump($datum); exit;
+        // var_dump($datum); exit;
 
-        // //
-        // // var_dump($datum); exit;
+        // 認証
+        if (Auth::guard('admin')->attempt($datum) === false) {
+            return back()
+                    ->withInput() // 入力値の保持
+                    ->withErrors(['auth' => 'ログインIDかパスワードに誤りがあります。']) //エラーメッセージの出力
+                    ;
+        }
 
-        // // 認証に失敗した場合
-        // if (Auth::attempt($datum) === false) {
-        //     return back()
-        //             ->withInput() // 入力値の保持
-        //             ->withErrors(['auth' => 'emailかパスワードに誤りがあります。']) //エラーメッセージの出力
-        //             ;
-        // }
-
-        // // 認証に成功した場合
-        // $request->session()->regenerate();
-        // return redirect()->intended('/task/list');
+        $request->session()->regenerate();
+        return redirect()->intended('/admin/top');
     }
     
     /**
@@ -54,9 +50,9 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
         $request->session()->regenerateToken(); // CSRFトークンの再生成
         $request->session()->regenerate(); // セッションIDの再生成
-        return redirect(route('front.index'));
+        return redirect(route('admin.index'));
     }
 }
