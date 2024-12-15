@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Task as TaskModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\CompletedTask as CompletedTaskModel;
+use Symfony\Component\HttpFoundation\StreamedRespomse;
 
 class TaskController extends Controller
 {
@@ -23,19 +24,15 @@ class TaskController extends Controller
         $per_page = 3;
 
         // 一覧の取得
-        $list = TaskModel::where('user_id', Auth::id())
-                        ->orderBy('priority', 'DESC')
-                        ->orderBy('period')
-                        ->orderBy('created_at')
-                        ->paginate($per_page);
-                        // ->get();
-        $sql = TaskModel::where('user_id', Auth::id())
-                        ->orderBy('priority', 'DESC')
-                        ->orderBy('period')
-                        ->orderBy('created_at')
-                        ->toSql();
+        $list =  $this->getListBuilder()
+                      ->paginate($per_page);
+                      // ->get();
+        /*
+        $sql = $this->getListBuilder()
+            ->toSql();
         // echo "<pre>\n"; var_dump($sql, $list); exit;
         // var_dump($sql);
+        */
 
         return view('task.list', ['list' => $list]);
 
@@ -223,4 +220,70 @@ class TaskController extends Controller
         // 一覧に遷移する
         return redirect('/task/list');
     }
+
+    /**
+     * CSV ダウンロード
+     */
+    public function csvDownload()
+    {
+        // 一覧取得用のBuilderインスタンスを取得
+        $builder = $this->getListBuilder();
+
+        // ストリームレスポンスを生成して返す
+        return response()->stream(
+            function () use ($builder) {
+                // CSVの並び順設定
+                $data_list = [
+                    'id' => 'タスクID',
+                    'name' => 'タスク名',
+                    'priority' => '重要度',
+                    'period' => '期限',
+                    'detail' => 'タスク詳細',
+                    'created_at' => 'タスク作成日',
+                    'updated_at' => 'タスク修正日',
+                ];
+        
+                // 出力＋文字コード変換
+                $file = new \SplFileObject('php://filter/write=convert.iconv.UTF-8%2FSJIS/resource=php://output', 'w');
+                
+                // ヘッダを書き込む
+                $file->fputcsv(array_values($data_list));
+                
+                // データを「指定要件」づつ取得
+                $builder->chunk(1000, function ($tasks) use ($file, $data_list) {
+                    // 取得した「指定要件」毎に処理
+                    foreach($tasks as $datum) {
+                        $awk = []; // 作業領域の確保
+                        // $data_listに書いてある順番に、書いてある要素だけを$awkに格納する
+                        foreach($data_list as $k => $v) {
+                            if ($k === 'priority') {
+                                $awk[] = $datum->getPriorityString();
+                            } else {
+                                $awk[] = $datum->$k;
+                            }
+                        }
+                        // CSVの1行を出力
+                        $file->fputcsv($awk);
+                    }
+                });
+            },
+            200,
+            [
+                'content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="task_list.' . date('Ymd') . '.csv"',
+            ]
+        );
+    }
+
+
+    /**
+     * 一覧用の Illuminate\Database\Eloquent\Builder インスタンスの取得
+     */
+    protected function getListBuilder()
+    {
+        return TaskModel::where('user_id', Auth::id())
+                    ->orderBy('priority', 'DESC')
+                    ->orderBy('period')
+                    ->orderBy('created_at'); 
+    }    
 }
