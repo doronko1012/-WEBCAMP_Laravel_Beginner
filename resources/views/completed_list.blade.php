@@ -6,7 +6,7 @@
 {{-- メインコンテンツ--}}
 @section('contents')
         <h1>完了タスクの一覧</h1>
-        <a href="/task/list">タスク一覧に戻る（未実装）</a><br>
+        <a href="/task/list">タスク一覧に戻る</a><br>
 
         <table border="1">
         <tr>
@@ -18,7 +18,7 @@
         <tr>
             <td>{{ $completed_tasks->name }}
             <td>{{ $completed_tasks->period  }}
-            <td>{{ $completed_tasks->getPriorityString()  }}
+            <td>{{ $completed_tasks->priority  }}
             <td>{{ $completed_tasks->created_at  }}
 
         @endforeach

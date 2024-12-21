@@ -2,7 +2,7 @@
 
 {{--メインコンテンツ --}}
 @section('contents')
-        <h1>ログイン</h1>
+        <h1>ユーザー登録</h1>
         @if ($errors ->any())
             <div>
             @foreach ($errors->all() as $error)
@@ -14,7 +14,6 @@
             @csrf
             email：<input type="text" name="email" value="{{ old('email') }}"><br>
             パスワード：<input type="password" name="password"><br>
-            <button>ログインする</button><br>
-            <a href=".html">会員登録（未実装）</a>
+            <button>登録する</button><br>
         </form>
 @endsection
