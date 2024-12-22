@@ -18,7 +18,7 @@
         <tr>
             <td>{{ $completed_tasks->name }}
             <td>{{ $completed_tasks->period  }}
-            <td>{{ $completed_tasks->priority  }}
+            <td>{{ $completed_tasks->getpriorityString()  }}
             <td>{{ $completed_tasks->created_at  }}
 
         @endforeach
@@ -28,7 +28,7 @@
         現在 {{ $list->currentPage() }} ページ目<br>
          <!-- {{ $list->links() }} -->
         @if ($list->onFirstPage() === false)
-            <a href="/task/list">最初のページ</a>
+            <a href="/completed_tasks/list">最初のページ</a>
         @else
             最初のページ
         @endif

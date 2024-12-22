@@ -24,6 +24,7 @@ class CompletedTaskController extends Controller
         // 1Pageあたりの表示アイテム数を設定
         $per_page = 3;
 
+        // 一覧の取得
         $list =  $this->getListBuilder()
                       ->paginate($per_page);
         return view('completed_list', ['list' => $list]);
