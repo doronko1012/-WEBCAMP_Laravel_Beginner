@@ -3,9 +3,6 @@
 {{--メインコンテンツ --}}
 @section('contents')
         <h1>ユーザー登録</h1>
-        @if (session('front.user_register_sucsess') == true)
-            ユーザを登録しました！！
-        @endif
         @if ($errors ->any())
             <div>
             @foreach ($errors->all() as $error)
