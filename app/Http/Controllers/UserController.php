@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\TaskRegisterPostRequest;
+use App\Http\Requests\UserRegistrePostRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Task as TaskModel;
-use App\Models\User as Authenticatable;
+use App\Models\User as UserModel;
 use Illuminate\Support\Facades\DB;
-use App\Models\CompletedTask as CompletedTaskModel;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\StreamedRespomse;
 
 class UserController extends Controller
 {
         /**
-     * 登録画面 を表示する
+     * ユーザーの新規登録画面を表示する
      * 
      * @return \Illuminate\View\View
      */
@@ -24,12 +24,30 @@ class UserController extends Controller
     }
 
     /**
-     * データベース処理
+     * ユーザーの新規登録
      * 
      * @return \Illuminate\View\View
      */
-    public function register()
+    public function register(UserRegistrePostRequest $request)
     {
-        return view('welcome_second');
+        // validate済みのデータの取得
+        $datum = $request->validated(); 
+        $datum['password'] = Hash::make($datum['password']);
+        //var_dump($datum); exit;
+
+        // テーブルへのINSERT
+        try{
+            $r = UserModel::create($datum);
+            //var_dump($r); exit;
+        }catch(\Throwable $e){
+            echo $e->getMessage();
+            exit;
+        }
+
+        // ユーザー登録成功
+        $request->session()->flash('front.user_register_sucsess', true);
+
+        // リダイレクト
+        return redirect('/user/register');
     }   
 }

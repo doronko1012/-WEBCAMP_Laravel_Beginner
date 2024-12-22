@@ -16,13 +16,13 @@ return new class extends Migration
             $table->string('name', 128);
             $table->string('email', 254)->unique();
             $table->datetime('email_verified_at')->nullable();
-            $table->string('password', 255);
+            $table->string('password', 72);
             $table->rememberToken();
             // $table->timestamps();
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
 
-            $table->collation = 'utf8mb4_bin';
+            $table->collation = 'utf8mb4_bin';  // VARCHARでも大文字・小文字が区別される
         });
     }
 

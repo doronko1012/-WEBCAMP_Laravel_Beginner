@@ -25,6 +25,10 @@ use App\Http\Controllers\UserController;
 Route::get('/', [AuthController::class, 'index'])->name('front.index');
 Route::Post('/login', [AuthController::class, 'login']);
 
+// ユーザー登録
+Route::get('/user/register', [UserController::class, 'index']);
+Route::post('/user/register', [UserController::class, 'register']);
+
 // 認可処理
 Route::middleware(['auth'])->group(function() {
     Route::prefix('/task')->group(function () {
@@ -40,8 +44,6 @@ Route::middleware(['auth'])->group(function() {
     });
     Route::get('/logout', [AuthController::Class, 'logout']);
     Route::get('/completed_tasks/list', [CompletedTaskController::class, 'list']); //->whereNumber('task_id')->name('complete');
-    //Route::get('/user/register', [UserController::class, 'index']);
-    //Route::post('/user/register', [UserController::class, 'index']);
 });
 
 // 管理画面
